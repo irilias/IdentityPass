@@ -1,0 +1,15 @@
+// Mocking a users database for testing. No hashing just plain text.
+ [
+    {
+      "Username": "irilias",
+      "Password": "123456"
+    },
+    {
+      "Username": "testuser",
+      "Password": "456789"
+    },
+    {
+      "Username": "admin",
+      "Password": "000000"
+    }
+]
