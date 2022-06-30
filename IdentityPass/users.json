@@ -1,15 +1,27 @@
 // Mocking a users database for testing. No hashing just plain text.
- [
-    {
-      "Username": "irilias",
-      "Password": "123456"
-    },
-    {
-      "Username": "testuser",
-      "Password": "456789"
-    },
-    {
-      "Username": "admin",
-      "Password": "000000"
-    }
+[
+  {
+    "Username": "irilias",
+    "Password": "123456",
+    "IsAdmin": "false",
+    "IsHR": "false"
+  },
+  {
+    "Username": "userHR",
+    "Password": "456789",
+    "IsAdmin": "false",
+    "IsHR": "true"
+  },
+  {
+    "Username": "admin",
+    "Password": "000000",
+    "IsAdmin": "true",
+    "IsHR": "false"
+  },
+  {
+    "Username": "adminHR",
+    "Password": "111111",
+    "IsAdmin": "true",
+    "IsHR": "true"
+  }
 ]

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityPass.Models;
 using IdentityPass.Services.Descriptions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -38,11 +39,11 @@ namespace IdentityPass.Pages.Account
             && u.Password == Credential.Password);
             if (currentUser is null)
             {
-                ModelState.AddModelError($"{Credential.Username}", "User not found!");
+                ModelState.AddModelError(nameof(Credential), "User not found!");
                 return Page();
             }
 
-            var claimsPrincipal = identityService.GetClaimsPrincipal(currentUser.Username, authenticationScheme);
+            var claimsPrincipal = identityService.GetClaimsPrincipal(currentUser, authenticationScheme);
             
             // Serialize the principal, encrypt it and save it as a cookie into the HttpContext.
             await HttpContext.SignInAsync("CookieAuth", claimsPrincipal);
@@ -50,13 +51,5 @@ namespace IdentityPass.Pages.Account
         }
     }
 
-    public class Credential
-    {
-        [Required]
-        public string Username { get; set; }
 
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-    }
 }

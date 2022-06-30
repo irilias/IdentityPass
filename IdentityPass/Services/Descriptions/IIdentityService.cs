@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IdentityPass.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -11,9 +12,9 @@ namespace IdentityPass.Services.Descriptions
         /// <summary>
         /// Create and return the Claims Principal.
         /// </summary>
-        /// <param name="userName">Username</param>
+        /// <param name="currentUser">Current Logged in user.</param>
         /// <param name="authScheme">The authentication Scheme / Type</param>
         /// <returns></returns>
-        ClaimsPrincipal GetClaimsPrincipal(string userName, string authScheme);
+        ClaimsPrincipal GetClaimsPrincipal(Credential currentUser, string authScheme);
     }
 }

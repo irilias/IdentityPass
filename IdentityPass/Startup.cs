@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityPass.Models;
 using IdentityPass.Services;
 using IdentityPass.Services.Descriptions;
 using Microsoft.AspNetCore.Builder;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using CustomClaims = IdentityPass.Models.ClaimTypes;
 namespace IdentityPass
 {
     public class Startup
@@ -31,6 +32,25 @@ namespace IdentityPass
             {
                 options.Cookie.Name = "CookieAuth";
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.OnlyAdmin, policy =>
+                {
+                    policy.RequireClaim(CustomClaims.IsAdmin, "True");
+                });
+                options.AddPolicy(Policies.OnlyAdminHR, policy =>
+                {
+                    policy
+                    .RequireClaim(CustomClaims.IsAdmin, "True")
+                    .RequireClaim(CustomClaims.IsHR, "True");
+                });
+                options.AddPolicy(Policies.OnlyHR, policy =>
+                {
+                    policy.RequireClaim(CustomClaims.IsHR, "True");
+                });
             });
             services.AddScoped(typeof(IIdentityService), typeof(IdentityService));
             services.AddScoped(typeof(IFileService), typeof(FileService));
