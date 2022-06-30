@@ -43,9 +43,13 @@ namespace IdentityPass.Pages.Account
             }
 
             var claimsPrincipal = identityService.GetClaimsPrincipal(currentUser, Constants.CookieAuthScheme);
-            
+
+            var authenticationProperties = new AuthenticationProperties()
+            {
+                IsPersistent = Credential.RememberMe
+            };
             // Serialize the principal, encrypt it and save it as a cookie into the HttpContext.
-            await HttpContext.SignInAsync(Constants.CookieAuthScheme, claimsPrincipal);
+            await HttpContext.SignInAsync(Constants.CookieAuthScheme, claimsPrincipal, authenticationProperties);
             return RedirectToPage("/Index");
         }
     }

@@ -34,9 +34,9 @@ namespace IdentityPass
             services.AddAuthentication(Constants.CookieAuthScheme).AddCookie(Constants.CookieAuthScheme, options =>
             {
                 options.Cookie.Name = Constants.CookieAuthScheme;
-                options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
             });
             services.AddAuthorization(options =>
             {
@@ -44,12 +44,13 @@ namespace IdentityPass
                 {
                     policy.RequireClaim(CustomClaims.IsAdmin, "True");
                 });
+                var probationPeriodInMonths = int.Parse(Configuration[$"{Constants.AuthorizationConfigSection}:{Constants.HRManagersProbationPeriodInMonths}"]);
                 options.AddPolicy(Policies.OnlyAdminHR, policy =>
                 {
                     policy
                     .RequireClaim(CustomClaims.IsAdmin, "True")
                     .RequireClaim(CustomClaims.IsHR, "True")
-                    .Requirements.Add(new HRManagerProbationRequirement(3));
+                    .Requirements.Add(new HRManagerProbationRequirement(probationPeriodInMonths));
                 });
                 options.AddPolicy(Policies.OnlyHR, policy =>
                 {

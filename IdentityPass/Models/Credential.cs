@@ -20,5 +20,7 @@ namespace IdentityPass.Models
         [Required]
         public bool IsHR { get; set; }
         public DateTime EmploymentDate { get; set; }
+        [Display(Name ="Remember Me")]
+        public bool RememberMe { get; set; }
     }
 }
