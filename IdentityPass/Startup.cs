@@ -28,9 +28,9 @@ namespace IdentityPass
         {
             services.AddRazorPages();
 
-            services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", options =>
+            services.AddAuthentication(Constants.CookieAuthScheme).AddCookie(Constants.CookieAuthScheme, options =>
             {
-                options.Cookie.Name = "CookieAuth";
+                options.Cookie.Name = Constants.CookieAuthScheme;
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";

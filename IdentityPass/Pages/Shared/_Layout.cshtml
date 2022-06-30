@@ -1,6 +1,6 @@
 ﻿@using System.Security.Claims;
 @{
-    var username  = User?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Name);
+    var name = User.Identity.Name;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -33,9 +33,12 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1" style="justify-content:flex-end;">
                         <li class="nav-item">
-                            @if (username != null)
+                            @if (name != null)
                             {
-                                <a class="nav-link text-dark" asp-page="">Hello @username.Value</a>
+                            <form method="post" class="form-inline" asp-page="/Account/Logout">
+                                <a class="nav-link text-dark" asp-page="">Hello @name</a>
+                                <button type="submit" class="text-dark btn-link p-1" style="border:none;background-color:#EE4B2B;border-radius:.5rem"> Logout </button>
+                            </form>
                             }
                             else
                             {

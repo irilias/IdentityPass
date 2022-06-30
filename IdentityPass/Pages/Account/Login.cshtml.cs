@@ -16,7 +16,6 @@ namespace IdentityPass.Pages.Account
     {
         private readonly IIdentityService identityService;
         private readonly IFileService fileService;
-        private const string authenticationScheme = "CookieAuth";
         [BindProperty]
         public Credential Credential { get; set; }
 
@@ -43,10 +42,10 @@ namespace IdentityPass.Pages.Account
                 return Page();
             }
 
-            var claimsPrincipal = identityService.GetClaimsPrincipal(currentUser, authenticationScheme);
+            var claimsPrincipal = identityService.GetClaimsPrincipal(currentUser, Constants.CookieAuthScheme);
             
             // Serialize the principal, encrypt it and save it as a cookie into the HttpContext.
-            await HttpContext.SignInAsync("CookieAuth", claimsPrincipal);
+            await HttpContext.SignInAsync(Constants.CookieAuthScheme, claimsPrincipal);
             return RedirectToPage("/Index");
         }
     }
