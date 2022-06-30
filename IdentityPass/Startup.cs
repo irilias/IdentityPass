@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityPass.Models;
+using IdentityPass.Authorization;
 using IdentityPass.Services;
 using IdentityPass.Services.Descriptions;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +12,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using CustomClaims = IdentityPass.Models.ClaimTypes;
+using CustomClaims = IdentityPass.Authorization.ClaimTypes;
+using Microsoft.AspNetCore.Authorization;
+
 namespace IdentityPass
 {
     public class Startup
@@ -45,7 +48,8 @@ namespace IdentityPass
                 {
                     policy
                     .RequireClaim(CustomClaims.IsAdmin, "True")
-                    .RequireClaim(CustomClaims.IsHR, "True");
+                    .RequireClaim(CustomClaims.IsHR, "True")
+                    .Requirements.Add(new HRManagerProbationRequirement(3));
                 });
                 options.AddPolicy(Policies.OnlyHR, policy =>
                 {
@@ -54,6 +58,7 @@ namespace IdentityPass
             });
             services.AddScoped(typeof(IIdentityService), typeof(IdentityService));
             services.AddScoped(typeof(IFileService), typeof(FileService));
+            services.AddSingleton(typeof(IAuthorizationHandler), typeof(HRManagerProbationRequirementHandler));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

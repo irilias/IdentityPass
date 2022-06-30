@@ -1,5 +1,6 @@
 ﻿using IdentityPass.Services.Descriptions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,8 @@ namespace IdentityPass.Services
             try
             {
                 var content = await ReadFile(filepath);
-                return JsonConvert.DeserializeObject<List<T>>(content);
+                return JsonConvert.DeserializeObject<List<T>>(content
+                    , new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
             }
             catch (Exception)
             {

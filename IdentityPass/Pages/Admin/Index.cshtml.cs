@@ -1,4 +1,4 @@
-﻿using IdentityPass.Models;
+﻿using IdentityPass.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace IdentityPass.Pages.Admin

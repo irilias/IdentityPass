@@ -19,5 +19,6 @@ namespace IdentityPass.Models
         public bool IsAdmin { get; set; }
         [Required]
         public bool IsHR { get; set; }
+        public DateTime EmploymentDate { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using BuiltInClaims = System.Security.Claims.ClaimTypes;
-using CustomClaims = IdentityPass.Models.ClaimTypes;
+using CustomClaims = IdentityPass.Authorization.ClaimTypes;
 using System.Threading.Tasks;
 
 namespace IdentityPass.Services
@@ -20,6 +20,7 @@ namespace IdentityPass.Services
                 new Claim(BuiltInClaims.Email,$"{currentUser.Username}@identitypass.io"),
                 new Claim(CustomClaims.IsAdmin, currentUser.IsAdmin.ToString()),
                 new Claim(CustomClaims.IsHR, currentUser.IsHR.ToString()),
+                new Claim(CustomClaims.EmployementDate, currentUser.EmploymentDate.ToString()),
             };
             var identity = new ClaimsIdentity(claims,$"{authScheme}");
             return new ClaimsPrincipal(identity);
