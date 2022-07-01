@@ -10,5 +10,7 @@ namespace IdentityPass.Models
         public const string CookieAuthScheme = "CookieAuth";
         public const string AuthorizationConfigSection = "Authorization";
         public const string HRManagersProbationPeriodInMonths = "HRManagersProbationPeriodInMonths";
+        public const string WebAPILogicalName = "WeatherApi";
+
     }
 }

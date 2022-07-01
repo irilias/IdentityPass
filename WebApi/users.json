@@ -1,0 +1,38 @@
+// Mocking a users database for testing. No hashing just plain text.
+[
+  {
+    "Username": "irilias",
+    "Password": "123456",
+    "IsAdmin": "false",
+    "IsHR": "false",
+    "EmploymentDate": "01/02/2022"
+  },
+  {
+    "Username": "userHR",
+    "Password": "456789",
+    "IsAdmin": "false",
+    "IsHR": "true",
+    "EmploymentDate": "21/03/2021"
+  },
+  {
+    "Username": "admin",
+    "Password": "000000",
+    "IsAdmin": "true",
+    "IsHR": "false",
+    "EmploymentDate": "19/09/2021"
+  },
+  {
+    "Username": "newAdminHR",
+    "Password": "111111",
+    "IsAdmin": "true",
+    "IsHR": "true",
+    "EmploymentDate": "15/05/2022"
+  },
+  {
+    "Username": "adminHR",
+    "Password": "111111",
+    "IsAdmin": "true",
+    "IsHR": "true",
+    "EmploymentDate": "15/01/2019"
+  }
+]

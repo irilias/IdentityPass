@@ -1,4 +1,4 @@
-﻿using IdentityPass.Services.Descriptions;
+﻿using CoreServices.FileServices.Descriptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IdentityPass.Services
+namespace CoreServices.FileServices
 {
     public class FileService : IFileService
     {

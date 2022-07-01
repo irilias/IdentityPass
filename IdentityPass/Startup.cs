@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CustomClaims = IdentityPass.Authorization.ClaimTypes;
 using Microsoft.AspNetCore.Authorization;
+using CoreServices.FileServices.Descriptions;
+using CoreServices.FileServices;
 
 namespace IdentityPass
 {
@@ -36,7 +38,7 @@ namespace IdentityPass
                 options.Cookie.Name = Constants.CookieAuthScheme;
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
-                options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
+                //options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
             });
             services.AddAuthorization(options =>
             {
@@ -60,6 +62,11 @@ namespace IdentityPass
             services.AddScoped(typeof(IIdentityService), typeof(IdentityService));
             services.AddScoped(typeof(IFileService), typeof(FileService));
             services.AddSingleton(typeof(IAuthorizationHandler), typeof(HRManagerProbationRequirementHandler));
+
+            services.AddHttpClient(Constants.WebAPILogicalName, client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44330/");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

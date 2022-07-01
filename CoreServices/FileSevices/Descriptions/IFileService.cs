@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IdentityPass.Services.Descriptions
+namespace CoreServices.FileServices.Descriptions
 {
     public interface IFileService
     {

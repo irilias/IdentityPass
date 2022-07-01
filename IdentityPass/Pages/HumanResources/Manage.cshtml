@@ -6,3 +6,33 @@
 
 <h1>Welcome to the Human Resources Admin Page</h1>
 
+
+@if (Model.WeatherForecast.Count > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <caption>Weather forecast</caption>
+            <thead>
+                <tr>
+                    <th><label asp-for="@Model.WeatherForecast.First().Date"></label></th>
+                    <th><label asp-for="@Model.WeatherForecast.First().TemperatureC"></label></th>
+                    <th><label asp-for="@Model.WeatherForecast.First().TemperatureF"></label></th>
+                    <th><label asp-for="@Model.WeatherForecast.First().Summary"></label></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.WeatherForecast)
+                {
+                <tr>
+                    <td>@item.Date</td>
+                    <td>@item.TemperatureC</td>
+                    <td>@item.TemperatureF</td>
+                    <td>@item.Summary</td>
+                </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
