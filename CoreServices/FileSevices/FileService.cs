@@ -1,6 +1,7 @@
 ﻿using CoreServices.FileServices.Descriptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,5 +27,23 @@ namespace CoreServices.FileServices
             }
         }
         private async Task<string> ReadFile(string filepath) => await File.ReadAllTextAsync(filepath);
+
+
+        public async Task<T> GetValueFromJsonFileByKey<T>(string filepath, string predicatKey, string predicatValue, string key)
+        {
+            try
+            {
+                var content = await ReadFile(filepath);
+                var file = JArray.Parse(content);
+                var node = file.Children<JObject>().FirstOrDefault(o => o[predicatKey] != null 
+                && o[predicatKey].ToString() == predicatValue);
+                return node != null ? node.Value<T>(key) : default;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

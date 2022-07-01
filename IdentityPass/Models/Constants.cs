@@ -11,6 +11,11 @@ namespace IdentityPass.Models
         public const string AuthorizationConfigSection = "Authorization";
         public const string HRManagersProbationPeriodInMonths = "HRManagersProbationPeriodInMonths";
         public const string WebAPILogicalName = "WeatherApi";
+        public const string WebAPIAuthUri = "Authentication";
+        public const string WebAPIJwtBearerScheme = "Bearer";
+        public const string UsersJsonPasswordKey = "Password";
+        public const string UsersJsonUsernameKey = "Username";
+        public const string UsersJsonFilePath = "users.json";
 
     }
 }

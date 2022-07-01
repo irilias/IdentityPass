@@ -38,7 +38,7 @@ namespace IdentityPass
                 options.Cookie.Name = Constants.CookieAuthScheme;
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
-                //options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(300);
             });
             services.AddAuthorization(options =>
             {

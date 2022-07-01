@@ -34,7 +34,7 @@ namespace IdentityPass.Pages.Account
         {
             if (!ModelState.IsValid) return Page();
 
-            var users = await fileService.ParseJsonToObjects<Credential>("users.json");
+            var users = await fileService.ParseJsonToObjects<Credential>(Constants.UsersJsonFilePath);
             var currentUser = users.SingleOrDefault(u => u.Username == Credential.Username
             && u.Password == Credential.Password);
             if (currentUser is null)
