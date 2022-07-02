@@ -343,3 +343,7 @@ healthchecksdb
 /WebApi/Properties/launchSettings.json
 /IdentityPass/appsettings.Development.json
 /IdentityPass/appsettings.json
+/AspNetIdentity/Properties/launchSettings.json
+/AspNetIdentity/wwwroot/css/site.css
+/AspNetIdentity/appsettings.json
+/AspNetIdentity/appsettings.Development.json
