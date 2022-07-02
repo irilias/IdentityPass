@@ -12,10 +12,13 @@ namespace IdentityPass.Models
         public const string HRManagersProbationPeriodInMonths = "HRManagersProbationPeriodInMonths";
         public const string WebAPILogicalName = "WeatherApi";
         public const string WebAPIAuthUri = "Authentication";
+        public const string WebAPIWeatherForecastUri = "WeatherForecast";
         public const string WebAPIJwtBearerScheme = "Bearer";
         public const string UsersJsonPasswordKey = "Password";
         public const string UsersJsonUsernameKey = "Username";
         public const string UsersJsonFilePath = "users.json";
-
+        public const string SessionIdleTimeoutInHours = "SessionIdleTimeoutInHours";
+        public const string JwtSessionKey = "JwtSessionKey";
+        public const string CookieAuthIdleTimeoutInMinutes = "CookieAuthIdleTimeoutInMinutes";
     }
 }

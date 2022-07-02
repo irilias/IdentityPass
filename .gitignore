@@ -341,3 +341,5 @@ healthchecksdb
 /WebApi/appsettings.json
 /WebApi/appsettings.Development.json
 /WebApi/Properties/launchSettings.json
+/IdentityPass/appsettings.Development.json
+/IdentityPass/appsettings.json

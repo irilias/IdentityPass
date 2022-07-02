@@ -16,6 +16,8 @@ using CustomClaims = IdentityPass.Authorization.ClaimTypes;
 using Microsoft.AspNetCore.Authorization;
 using CoreServices.FileServices.Descriptions;
 using CoreServices.FileServices;
+using CoreServices.Authentication.Descriptions;
+using CoreServices.Authentication;
 
 namespace IdentityPass
 {
@@ -38,7 +40,8 @@ namespace IdentityPass
                 options.Cookie.Name = Constants.CookieAuthScheme;
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
-                options.ExpireTimeSpan = TimeSpan.FromSeconds(300);
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(int
+                .Parse(Configuration[$"{Constants.CookieAuthIdleTimeoutInMinutes}"]));
             });
             services.AddAuthorization(options =>
             {
@@ -59,13 +62,23 @@ namespace IdentityPass
                     policy.RequireClaim(CustomClaims.IsHR, "True");
                 });
             });
-            services.AddScoped(typeof(IIdentityService), typeof(IdentityService));
-            services.AddScoped(typeof(IFileService), typeof(FileService));
-            services.AddSingleton(typeof(IAuthorizationHandler), typeof(HRManagerProbationRequirementHandler));
+            services.AddScoped<IIdentityService,IdentityService>();
+            services.AddScoped<IFileService,FileService>();
+            services.AddSingleton<IAuthorizationHandler,HRManagerProbationRequirementHandler>();
+            services.AddSingleton<IJWTAuthenticationService, JWTAuthenticationService>();
 
             services.AddHttpClient(Constants.WebAPILogicalName, client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44330/");
+            });
+
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan
+                .FromHours(int
+                .Parse(Configuration[$"{Constants.SessionIdleTimeoutInHours}"]));
             });
         }
 
@@ -88,7 +101,7 @@ namespace IdentityPass
 
             app.UseRouting();
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

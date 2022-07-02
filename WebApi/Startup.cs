@@ -18,6 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using WebApi.Authorization;
+using CustomClaims = WebApi.Authorization.ClaimTypes;
 
 namespace WebApi
 {
@@ -36,7 +38,7 @@ namespace WebApi
             services.AddControllers();
             
             services.AddScoped<IFileService, FileService>();
-            services.AddSingleton<IJWTAuthenticationService, JWTAuthenticationService>();
+          
 
             services.AddAuthentication(options =>
             {
@@ -54,6 +56,18 @@ namespace WebApi
                     ValidateIssuer = false,
                     ClockSkew = TimeSpan.Zero
                 };
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.OnlyAdmin, policy =>
+                {
+                    policy.RequireClaim(CustomClaims.IsAdmin, "True");
+                });
+                options.AddPolicy(Policies.OnlyHR, policy =>
+                {
+                    policy.RequireClaim(CustomClaims.IsHR, "True");
+                });
             });
         }
 

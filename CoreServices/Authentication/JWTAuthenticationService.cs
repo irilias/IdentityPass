@@ -1,26 +1,41 @@
 ﻿using CoreServices.Authentication.Descriptions;
+using CoreServices.Authentication.DTOs;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using System.Net.Http.Json;
+using Newtonsoft.Json;
 
 namespace CoreServices.Authentication
 {
     public class JWTAuthenticationService : IJWTAuthenticationService
     {
-        public string CreateToken(IEnumerable<Claim> claims, DateTime expiresAt, string secretKey)
+        private readonly IHttpClientFactory httpClientFactory;
+
+        public JWTAuthenticationService(IHttpClientFactory httpClientFactory)
         {
-            var key = Encoding.ASCII.GetBytes(secretKey);
-            var jwt = new JwtSecurityToken(
-               claims: claims,
-               notBefore: DateTime.UtcNow,
-               expires: expiresAt,
-               signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key)
-               , SecurityAlgorithms.HmacSha256Signature)
-               );
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
+            this.httpClientFactory = httpClientFactory;
         }
+        public async Task<string> Authenticate(string webAPILogicalName
+            , string webAPIAuthUri
+            , string userName
+            , string password)
+        {
+            var httpClient = httpClientFactory.CreateClient(webAPILogicalName);
+            var response = await httpClient.PostAsJsonAsync(webAPIAuthUri, new Credential()
+            {
+                Username = userName,
+                Password = password
+            });
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+
+
     }
 }

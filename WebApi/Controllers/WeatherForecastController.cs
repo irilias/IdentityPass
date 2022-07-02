@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WebApi.Authorization;
 
 namespace WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    [Authorize(Policy =Policies.OnlyAdmin)]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

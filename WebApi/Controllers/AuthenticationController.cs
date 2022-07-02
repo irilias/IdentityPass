@@ -5,9 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using CoreServices.Authentication.Descriptions;
 using CoreServices.FileServices.Descriptions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -21,15 +19,12 @@ namespace WebApi.Controllers
     {
         private readonly IFileService fileService;
         private readonly IConfiguration configuration;
-        private readonly IJWTAuthenticationService jwtAuthenticationService;
 
         public AuthenticationController(IFileService fileService
-            , IConfiguration configuration
-            , IJWTAuthenticationService jwtAuthenticationService)
+            , IConfiguration configuration)
         {
             this.fileService = fileService;
             this.configuration = configuration;
-            this.jwtAuthenticationService = jwtAuthenticationService;
         }
         public async Task<IActionResult> OnPost([FromBody] Credential credential)
         {
@@ -55,15 +50,16 @@ namespace WebApi.Controllers
             var secretKey = Encoding.ASCII.GetBytes(configuration.GetValue<string>("SecretKey"));
             return Ok(new
             {
-                access_token = jwtAuthenticationService.CreateToken(claims
+                access_token = CreateToken(claims
                 ,expiresAt
                 , configuration.GetValue<string>("SecretKey")),
                 expires_at = expiresAt
             });
         }
-
+       
     }
 
+  
     public class Credential
     {
         public string Username { get; set; }

@@ -10,6 +10,7 @@ using IdentityPass.Services.Descriptions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PageModel = Microsoft.AspNetCore.Mvc.RazorPages.PageModel;
 
 namespace IdentityPass.Pages.Account
 {
