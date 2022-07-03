@@ -1,8 +1,10 @@
-﻿using IdentityPass.Models;
+﻿using CoreServices.EmailServices.SMTP.Descriptions;
+using IdentityPass.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -15,14 +17,18 @@ namespace AspNetIdentity.Pages.Account
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
+        private readonly IEmailSender emailSender;
 
         [BindProperty]
         public RegisterViewModel RegisterViewModel { get; set; }
 
-        public RegisterModel(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public RegisterModel(UserManager<IdentityUser> userManager
+            , IConfiguration configuration
+            , IEmailSender emailSender)
         {
             this.userManager = userManager;
             this.configuration = configuration;
+            this.emailSender = emailSender;
         }
         public void OnGet()
         {
@@ -68,29 +74,53 @@ namespace AspNetIdentity.Pages.Account
 
         private async Task<bool> SendConfirmationEmail(IdentityUser user, string token)
         {
-            bool isSuccess;
-            var confirmationLink = Url.PageLink("EmailConfirmed", values: new { userId = user.Id, token });
             var smtpConfig = configuration.GetSection(Constants.SMTP);
-            var mail = new MailMessage(smtpConfig.GetValue<string>(Constants.SenderEmail)
-                , user.Email
-                , "IdentityPass - Please Confirm your Email"
-                , $"Please click on this link to confirm your email : \n {confirmationLink}");
+            var confirmationLink = Url.PageLink("EmailConfirmed", values: new { userId = user.Id, token });
             var sendInBlueSmtpServer = smtpConfig.GetSection(Constants.SMTPServerName);
-            using (var emailClient = new SmtpClient(sendInBlueSmtpServer.GetValue<string>(Constants.SMTPServerUrl)
-                , sendInBlueSmtpServer.GetValue<int>(Constants.SMTPServerPort)))
+            var email = new Email()
             {
-                emailClient.Credentials = new NetworkCredential()
-                {
-                    UserName = smtpConfig.GetValue<string>(Constants.SenderEmail),
-                    Password = sendInBlueSmtpServer.GetValue<string>(Constants.SMTPKey)
-                };
-                await emailClient.SendMailAsync(mail);
-                isSuccess = true;
-            }
-            return isSuccess;
+                RecipientEmail = user.Email,
+                SenderEmail = smtpConfig.GetValue<string>(Constants.SenderEmail),
+                Subject = "IdentityPass - Please Confirm your Email",
+                Body = $"Please click on this link to confirm your email : \n {confirmationLink}",
+                ServerUrl = sendInBlueSmtpServer.GetValue<string>(Constants.SMTPServerUrl),
+                ServerPort = sendInBlueSmtpServer.GetValue<int>(Constants.SMTPServerPort),
+                ServerUsername = smtpConfig.GetValue<string>(Constants.SenderEmail),
+                ServerPassword = sendInBlueSmtpServer.GetValue<string>(Constants.SMTPKey)
+            };
+            var emailString = JsonConvert.SerializeObject(email);
+            return await emailSender.SendEmail(emailString);
+            //bool isSuccess;
+            //var mail = new MailMessage(smtpConfig.GetValue<string>(Constants.SenderEmail)
+            //    , user.Email
+            //    , "IdentityPass - Please Confirm your Email"
+            //    , $"Please click on this link to confirm your email : \n {confirmationLink}");
+            //using (var emailClient = new SmtpClient(sendInBlueSmtpServer.GetValue<string>(Constants.SMTPServerUrl)
+            //    , sendInBlueSmtpServer.GetValue<int>(Constants.SMTPServerPort)))
+            //{
+            //    emailClient.Credentials = new NetworkCredential()
+            //    {
+            //        UserName = smtpConfig.GetValue<string>(Constants.SenderEmail),
+            //        Password = sendInBlueSmtpServer.GetValue<string>(Constants.SMTPKey)
+            //    };
+            //    await emailClient.SendMailAsync(mail);
+            //    isSuccess = true;
+            //}
+            //return isSuccess;
         }
     }
 
+    public class Email
+    {
+        public string SenderEmail { get; set; }
+        public string RecipientEmail { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+        public string ServerUrl { get; set; }
+        public int ServerPort { get; set; }
+        public string ServerUsername { get; set; }
+        public string ServerPassword { get; set; }
+    }
     public class RegisterViewModel
     {
         [Required]
