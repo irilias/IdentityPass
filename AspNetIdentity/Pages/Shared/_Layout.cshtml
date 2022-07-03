@@ -24,8 +24,33 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
+
                     </ul>
                 </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1" style="justify-content:flex-end;">
+
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <form method="post" class="form-inline" asp-page="/Account/Register">
+                                    <a class="nav-link text-dark" asp-page="/Account/Register">Register</a>
+                                </form>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-page="/Account/Login">Login</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                Welcome @User.Identity.Name
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+
             </div>
         </nav>
     </header>
