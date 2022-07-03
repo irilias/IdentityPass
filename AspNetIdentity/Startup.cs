@@ -1,4 +1,5 @@
 using AspNetIdentity.Data;
+using AspNetIdentity.Settings;
 using CoreServices.EmailServices.SMTP;
 using CoreServices.EmailServices.SMTP.Descriptions;
 using Microsoft.AspNetCore.Builder;
@@ -48,6 +49,8 @@ namespace AspNetIdentity
                 config.LogoutPath = "/Account/Logout";
             });
             services.AddScoped<IEmailSender, EmailSender>();
+
+            services.Configure<SmtpSetting>(Configuration.GetSection(SmtpSetting.SMTP));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
