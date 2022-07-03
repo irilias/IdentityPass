@@ -1,0 +1,58 @@
+﻿@page
+@model AspNetIdentity.Pages.Account.UserProfileModel
+@{
+    ViewData["Title"] = "UserProfile";
+}
+
+<h1>User Profile.</h1>
+<div class="container border p-5 mt-3">
+
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <form method="post">
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="@Model.UserProfileViewModel.Email"></label>
+            </div>
+            <div class="col-3">
+                <input asp-for="@Model.UserProfileViewModel.Email" class="form-control" readonly />
+            </div>
+            <span asp-validation-for="@Model.UserProfileViewModel.Email" class="text-danger"></span>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="@Model.UserProfileViewModel.Department"></label>
+            </div>
+            <div class="col-3">
+                <input asp-for="@Model.UserProfileViewModel.Department" class="form-control" />
+            </div>
+            <span asp-validation-for="@Model.UserProfileViewModel.Department" class="text-danger"></span>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="@Model.UserProfileViewModel.Position"></label>
+            </div>
+            <div class="col-3">
+                <input asp-for="@Model.UserProfileViewModel.Position" class="form-control" />
+            </div>
+            <span asp-validation-for="@Model.UserProfileViewModel.Position" class="text-danger"></span>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <input type="submit" class="btn btn-primary form-control" value="Save" />
+            </div>
+        </div>
+    </form>
+
+    @if (!String.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <p class="alert alert-success">
+            @Model.SuccessMessage
+        </p>
+    }
+</div>
+
+@section scripts {
+    <partial name="~/Pages/Shared/_ValidationScriptsPartial.cshtml" />
+}
+

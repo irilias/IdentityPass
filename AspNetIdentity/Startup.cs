@@ -1,4 +1,5 @@
 using AspNetIdentity.Data;
+using AspNetIdentity.Data.Account;
 using AspNetIdentity.Settings;
 using CoreServices.EmailServices.SMTP;
 using CoreServices.EmailServices.SMTP.Descriptions;
@@ -32,7 +33,7 @@ namespace AspNetIdentity
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
             });
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 4;
                 options.Password.RequireDigit = true;

@@ -1,40 +1,37 @@
-﻿using AspNetIdentity.Settings;
+﻿using AspNetIdentity.Data.Account;
+using AspNetIdentity.Settings;
 using CoreServices.EmailServices.SMTP.Descriptions;
-using IdentityPass.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
-using System.Net.Mail;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AspNetIdentity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly IConfiguration configuration;
+        private readonly UserManager<User> userManager;
         private readonly IEmailSender emailSender;
         private readonly IOptions<SmtpSetting> smtpOptions;
 
         [BindProperty]
         public RegisterViewModel RegisterViewModel { get; set; }
 
-        public RegisterModel(UserManager<IdentityUser> userManager
-            , IConfiguration configuration
+        public RegisterModel(UserManager<User> userManager
             , IEmailSender emailSender
             , IOptions<SmtpSetting> smtpOptions)
         {
             this.userManager = userManager;
-            this.configuration = configuration;
             this.emailSender = emailSender;
             this.smtpOptions = smtpOptions;
         }
+
         public void OnGet()
         {
             RegisterViewModel = new RegisterViewModel();
@@ -44,18 +41,28 @@ namespace AspNetIdentity.Pages.Account
         {
             if (!ModelState.IsValid) return Page();
 
-            var user = new IdentityUser()
+            var user = new User()
             {
                 Email = RegisterViewModel.Email,
-                UserName = RegisterViewModel.Email
+                UserName = RegisterViewModel.Email,
+                Department = RegisterViewModel.Department,
+                Position = RegisterViewModel.Position
             };
             var createUserResult = await userManager.CreateAsync(user, RegisterViewModel.Password);
 
             if (createUserResult.Succeeded)
             {
+                var departmentClaim = new Claim(nameof(RegisterViewModel.Department)
+                    , RegisterViewModel.Department);
+                var positionClaim = new Claim(nameof(RegisterViewModel.Position)
+                    , RegisterViewModel.Position);
+                await userManager.AddClaimsAsync(user, new List<Claim>()
+                {
+                    departmentClaim, positionClaim
+                });
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 bool hasEmailBeenSentSuccessfully = await SendConfirmationEmail(user, token);
-                if(hasEmailBeenSentSuccessfully)
+                if (hasEmailBeenSentSuccessfully)
                 {
                     RegisterViewModel.Message = "Please confirm your e-mail to successfully register.";
                 }
@@ -109,6 +116,7 @@ namespace AspNetIdentity.Pages.Account
         public string ServerUsername { get; set; }
         public string ServerPassword { get; set; }
     }
+
     public class RegisterViewModel
     {
         [Required]
@@ -118,6 +126,12 @@ namespace AspNetIdentity.Pages.Account
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Position { get; set; }
 
         public string Message { get; set; }
     }

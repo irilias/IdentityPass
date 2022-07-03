@@ -1,4 +1,5 @@
-﻿using AspNetIdentity.Models;
+﻿using AspNetIdentity.Data.Account;
+using AspNetIdentity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -8,15 +9,16 @@ namespace AspNetIdentity.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly SignInManager<User> signInManager;
 
         [BindProperty]
         public Credential Credential { get; set; }
 
-        public LoginModel(SignInManager<IdentityUser> signInManager)
+        public LoginModel(SignInManager<User> signInManager)
         {
             this.signInManager = signInManager;
         }
+
         public void OnGet()
         {
         }
@@ -29,17 +31,18 @@ namespace AspNetIdentity.Pages.Account
                 , Credential.Password
                 , Credential.RememberMe
                 , lockoutOnFailure: true);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 return RedirectToPage("/index");
             }
-            if(result.IsLockedOut)
+            if (result.IsLockedOut)
             {
                 ModelState.AddModelError("LoginLockedOut", "You have been locked out. " +
                     "Please wait 30 seconds before trying again.");
-            }else
+            }
+            else
             {
-                ModelState.AddModelError("LoginFailed","Login Failed!");
+                ModelState.AddModelError("LoginFailed", "Login Failed!");
             }
             return Page();
         }

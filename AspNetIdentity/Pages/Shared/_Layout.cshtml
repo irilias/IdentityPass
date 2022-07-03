@@ -43,8 +43,16 @@
                         }
                         else
                         {
+                            <li class="nav-item" style="margin: auto 1rem;">
+                                Welcome @User.Identity.Name (Position @User.Claims.First(c => c.Type == "Position").Value)
+                            </li>
                             <li class="nav-item">
-                                Welcome @User.Identity.Name
+                                <a class="nav-link text-dark" asp-page="/Account/UserProfile">User Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" class="form-inline" asp-page="/Account/Logout">
+                                    <button class="nav-link  border-0 bg-white text-danger">Logout</button>
+                                </form>
                             </li>
                         }
                     </ul>
