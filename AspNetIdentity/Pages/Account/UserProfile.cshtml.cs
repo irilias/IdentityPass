@@ -35,7 +35,8 @@ namespace AspNetIdentity.Pages.Account
                 {
                     Email = user.Email,
                     Department = departmentClaim.Value,
-                    Position = positionClaim.Value
+                    Position = positionClaim.Value,
+                    UseTwoFA = user.TwoFactorEnabled
                 };
             }
             catch (System.Exception)
@@ -55,6 +56,7 @@ namespace AspNetIdentity.Pages.Account
                     , new Claim(departmentClaim.Type, UserProfileViewModel.Department));
                 await userManager.ReplaceClaimAsync(user, positionClaim
                     , new Claim(positionClaim.Type, UserProfileViewModel.Position));
+                await userManager.SetTwoFactorEnabledAsync(user, UserProfileViewModel.UseTwoFA);
                 SuccessMessage = "Your profile has been updated successfully.";
             }
             catch (System.Exception)
@@ -70,7 +72,6 @@ namespace AspNetIdentity.Pages.Account
         {
             var user = await userManager.FindByNameAsync(User.Identity.Name);
             var claims = await userManager.GetClaimsAsync(user);
-
             return (user
                 , claims.FirstOrDefault(c => c.Type == CustomClaimTypes.Department)
                 , claims.FirstOrDefault(c => c.Type == CustomClaimTypes.Position));
@@ -86,5 +87,9 @@ namespace AspNetIdentity.Pages.Account
 
         [Required]
         public string Position { get; set; }
+
+        [Display(Name ="Enable Two Factor Authentication")]
+        public bool UseTwoFA { get; set; }
+        
     }
 }

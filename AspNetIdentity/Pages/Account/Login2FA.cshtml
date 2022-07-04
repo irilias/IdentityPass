@@ -1,0 +1,32 @@
+﻿@page
+@model AspNetIdentity.Pages.Account.Login2FAModel
+@{
+    ViewData["Title"] = "Login2FA";
+}
+
+<h5>Please confirm your login by pasting the code you have recieved into the following input box :</h5>
+
+<div class="container border p-5 mt-3">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <form method="post">
+
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="Email2FA.VerificationToken"></label>
+            </div>
+            <div class="col-3">
+                <input asp-for="Email2FA.VerificationToken" class="form-control" />
+            </div>
+            <span asp-validation-for="Email2FA.VerificationToken" class="text-danger"></span>
+        </div>
+
+        <div class="row form-group">
+            <input type="hidden" asp-for="Email2FA.RememberMe" />
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <input type="submit" class="btn btn-primary form-control" value="Verify" />
+            </div>
+        </div>
+    </form>
+</div>

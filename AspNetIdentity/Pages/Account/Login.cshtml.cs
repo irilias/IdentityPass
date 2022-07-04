@@ -35,6 +35,13 @@ namespace AspNetIdentity.Pages.Account
             {
                 return RedirectToPage("/index");
             }
+            if(result.RequiresTwoFactor)
+            {
+                return RedirectToPage("/Account/Login2FA", new {
+                    Credential.Email,
+                    Credential.RememberMe
+                });
+            }
             if (result.IsLockedOut)
             {
                 ModelState.AddModelError("LoginLockedOut", "You have been locked out. " +
